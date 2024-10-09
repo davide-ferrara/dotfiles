@@ -20,4 +20,4 @@ znap eval iterm2 'curl -fsSL https://iterm2.com/shell_integration/zsh'
 znap function _pyenv pyenv "znap eval pyenv 'pyenv init - --no-rehash'"
 compctl -K    _pyenv pyenv
 
-
+export PATH="$PATH:/opt/nvim-linux64/bin"
