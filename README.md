@@ -1,8 +1,8 @@
 # dotfiles
 Download JetBrainsMono Nerd Font from: 
-`https://www.nerdfonts.com/font-downloads`
+[nerdfonts.com](https://www.nerdfonts.com/font-downloads)
 
-Unzip the folder to the Fedora Font Dir:
+Unzip the folder to the Fedora font dir:
 ```bash
   unzip JetBrainsMono.zip -d ~/.local/share/fonts/
 ```
@@ -10,7 +10,7 @@ Unzip the folder to the Fedora Font Dir:
 Install dependecines on Fedora:
 
 ```bash
-  sudo dnf -y install hypridle hyprlock hyprpaper waybar neovim python3-neovim wofi
+  sudo dnf -y install stow hypridle hyprlock hyprpaper waybar neovim python3-neovim wofi
 ```
 
 Stow the .configs:
