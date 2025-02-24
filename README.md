@@ -7,5 +7,5 @@ Install dependecines on Fedora:
 
 Stow the .configs:
 ```bash
-  stow --adopt $(ls -d */) 
+  stow $(ls -d */) 
 ```
