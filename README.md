@@ -1,4 +1,12 @@
 # dotfiles
+Download JetBrainsMono Nerd Font from: 
+`https://www.nerdfonts.com/font-downloads`
+
+Unzip the folder to the Fedora Font Dir:
+```bash
+  unzip JetBrainsMono.zip -d ~/.local/share/fonts/
+```
+
 Install dependecines on Fedora:
 
 ```bash
