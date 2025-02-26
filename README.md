@@ -1,4 +1,7 @@
 # dotfiles
+
+![immagine](https://github.com/user-attachments/assets/64257643-3157-41cf-913a-9c1981800415)
+
 Download JetBrainsMono Nerd Font from: 
 [nerdfonts.com](https://www.nerdfonts.com/font-downloads)
 
