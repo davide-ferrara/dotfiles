@@ -28,4 +28,6 @@ export PHP_INI_SCAN_DIR="/home/dave/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
 export PATH="$PATH:/opt/nvim-linux64/bin"
 export PATH="$PATH:/home/dave/Desktop/basex/bin"
 
-alias ls=ls
+alias ls="ls -l"
+alias grub="sudo nvim /etc/default/grub"
+alias grubup="sudo update-grub"
