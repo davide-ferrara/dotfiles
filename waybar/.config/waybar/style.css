@@ -118,7 +118,7 @@ tooltip label {
 
 /* == Workspaces == */
 #workspaces {
-  background: @main-fg;
+  background: transparent;
 }
 
 /* == Temperature == */
