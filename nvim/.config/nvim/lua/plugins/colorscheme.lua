@@ -1,12 +1,16 @@
 return {
+  { "ellisonleao/gruvbox.nvim" },
   {
-    "tokyonight.nvim",
+    "olimorris/onedarkpro.nvim",
+    priority = 1000, -- Ensure it loads first
+    options = {
+      transparency = true, -- Use a transparent background?
+    },
+  },
+  {
+    "LazyVim/LazyVim",
     opts = {
-      transparent = true,
-      styles = {
-        sidebars = "transparent",
-        floats = "transparent",
-      },
+      colorscheme = "onedark_dark",
     },
   },
 }

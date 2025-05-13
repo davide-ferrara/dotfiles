@@ -102,7 +102,6 @@ fi
 # Example aliases
 alias zshconfig="nvim ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
-export PATH="$PATH:/opt/nvim-linux64/bin"
 
 alias ls="ls -l"
 alias grub="sudo nvim /etc/default/grub"
