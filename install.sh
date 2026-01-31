@@ -56,8 +56,25 @@ fi
 echo "⚙️ Aggiornamento hyprland.conf..."
 HYPR_MAIN_CONF="$HYPR_CONFIG_DIR/hyprland.conf"
 
-# Definiamo il blocco di testo da aggiungere
-read -r -d '' TO_APPEND <<EOM
+# Debug: Stampiamo dove stiamo cercando di scrivere (così vedi se il percorso è giusto)
+echo "   📍 File target: $HYPR_MAIN_CONF"
+echo "   📍 Cartella custom: $CUSTOM_FOLDER_NAME"
+
+# Controllo se il file esiste
+if [ ! -f "$HYPR_MAIN_CONF" ]; then
+  echo "❌ ERRORE: Il file $HYPR_MAIN_CONF non esiste!"
+  exit 1
+fi
+
+# Controlla se è già stato modificato
+if grep -q "$CUSTOM_FOLDER_NAME" "$HYPR_MAIN_CONF"; then
+  echo "ℹ️  Le configurazioni sembrano già presenti. Salto."
+else
+  # 1. Aggiungo una riga vuota per sicurezza (evita di scrivere sulla stessa riga dell'ultimo comando)
+  echo "" >>"$HYPR_MAIN_CONF"
+
+  # 2. Uso cat con EOF per appendere il testo. È più affidabile di 'read'.
+  cat <<EOM >>"$HYPR_MAIN_CONF"
 
 # --- CUSTOM CONFIG ($CURRENT_USER) ---
 source = ~/.config/hypr/$CUSTOM_FOLDER_NAME/execs.conf
@@ -67,11 +84,6 @@ source = ~/.config/hypr/$CUSTOM_FOLDER_NAME/keybinds.conf
 # -------------------------------------
 EOM
 
-# Controlla se è già stato modificato
-if grep -q "$CUSTOM_FOLDER_NAME" "$HYPR_MAIN_CONF"; then
-  echo "ℹ️ Le configurazioni sembrano già presenti. Salto."
-else
-  echo "$TO_APPEND" >>"$HYPR_MAIN_CONF"
   echo "✅ Configurazioni aggiunte in fondo a hyprland.conf"
 fi
 
