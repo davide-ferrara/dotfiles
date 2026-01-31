@@ -27,7 +27,7 @@ echo "🌍 Settando il browser di default (Thorium)..."
 xdg-mime default thorium-browser.desktop x-scheme-handler/http
 xdg-mime default thorium-browser.desktop x-scheme-handler/https
 xdg-mime default thorium-browser.desktop text/html
-xdg-settings set default-web-browser thorium-browser.desktop
+# xdg-settings set default-web-browser thorium-browser.desktop
 
 echo "🔥 Autorizzando KDE Connect nel Firewall..."
 # Controlla se firewalld è in esecuzione prima di provare a configurarlo
