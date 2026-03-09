@@ -1,6 +1,3 @@
-1password-beta
-1password-cli
-aether
 alacritty
 amd-ucode
 android-sdk-cmdline-tools-latest
@@ -71,17 +68,14 @@ inetutils
 inxi
 iwd
 jq
-kdenlive
 kernel-modules-hook
 kvantum-qt5
-lazydocker
 lazygit
 less
 lib32-nvidia-utils
 lib32-vulkan-icd-loader
 libpulse
 libqalculate
-libreoffice-fresh
 libva-nvidia-driver
 libyaml
 limine
@@ -111,8 +105,6 @@ noto-fonts-extra
 nss-mdns
 nvidia-open-dkms
 nvidia-utils
-obs-studio
-obsidian
 ollama
 omarchy-keyring
 omarchy-nvim
@@ -120,7 +112,6 @@ omarchy-walker
 opencode
 openvpn
 pamixer
-pinta
 pipewire
 pipewire-alsa
 pipewire-jack
@@ -140,10 +131,8 @@ ruby
 rust
 satty
 sddm
-signal-desktop
 slurp
 snapper
-spotify
 starship
 stow
 sudo
@@ -159,7 +148,6 @@ tree-sitter-cli
 ttf-cascadia-mono-nerd
 ttf-ia-writer
 ttf-jetbrains-mono-nerd
-typora
 tzupdate
 ufw
 ufw-docker
