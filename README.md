@@ -12,18 +12,15 @@ My personal dotfiles managed with GNU stow.
 
 ## Setup
 
-1. Install dependencies:
-   ```bash
-   pacman -S stow yay
-   ```
+1. Clone this repo:
 
-2. Clone this repo:
    ```bash
    git clone https://github.com/yourusername/dotfiles.git ~/dotfiles
    cd dotfiles
    ```
 
-3. Run setup:
+2. Run the script:
+
    ```bash
    ./setup.sh
    ```
@@ -31,8 +28,9 @@ My personal dotfiles managed with GNU stow.
 ## Backup
 
 To backup installed packages:
+
 ```bash
-./backup-packages.txt
+./backup-packages.sh
 ```
 
 This saves to `packages.txt`.
@@ -40,6 +38,7 @@ This saves to `packages.txt`.
 ## Managing Configs
 
 Add a new config (e.g., kitty):
+
 ```bash
 mkdir -p kitty/.config/kitty
 cp ~/.config/kitty/* kitty/.config/kitty/
@@ -47,6 +46,7 @@ stow -t "$HOME" -S kitty
 ```
 
 Remove a config:
+
 ```bash
 stow -t "$HOME" -D kitty
 ```
