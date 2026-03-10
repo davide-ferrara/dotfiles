@@ -1,5 +1,4 @@
 alacritty
-amd-ucode
 android-sdk-cmdline-tools-latest
 android-studio
 asdcontrol
@@ -61,6 +60,7 @@ hyprland-preview-share-picker
 hyprlock
 hyprpicker
 hyprsunset
+hyprvoice-bin
 imagemagick
 impala
 imv
@@ -72,18 +72,13 @@ kernel-modules-hook
 kvantum-qt5
 lazygit
 less
-lib32-nvidia-utils
 lib32-vulkan-icd-loader
 libpulse
 libqalculate
-libva-nvidia-driver
 libyaml
 limine
 limine-mkinitcpio-hook
 limine-snapper-sync
-linux
-linux-firmware
-linux-headers
 llvm
 localsend
 lsof
@@ -103,15 +98,11 @@ noto-fonts-cjk
 noto-fonts-emoji
 noto-fonts-extra
 nss-mdns
-nvidia-open-dkms
-nvidia-utils
 ollama
-omarchy-keyring
-omarchy-nvim
-omarchy-walker
 opencode
 openvpn
 pamixer
+pavucontrol
 pipewire
 pipewire-alsa
 pipewire-jack
@@ -156,6 +147,7 @@ usage
 uwsm
 waybar
 wget
+whisper.cpp
 whois
 wireless-regdb
 wiremix
@@ -169,6 +161,7 @@ xmlstarlet
 xournalpp
 yaru-icon-theme
 yay
+ydotool
 yq
 zathura
 zathura-pdf-mupdf

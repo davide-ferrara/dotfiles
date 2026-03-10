@@ -1,0 +1,160 @@
+{
+   "checksum": "b581f0e61426f80d13a3943dd8e53222",
+   "roots": {
+      "bookmark_bar": {
+         "children": [ {
+            "date_added": "13406281239000000",
+            "date_last_used": "13416691225304818",
+            "guid": "27e82f5f-c56c-4442-91b3-8eaa2a4fecdb",
+            "id": "5",
+            "name": "Outlook",
+            "type": "url",
+            "url": "https://outlook.office.com/mail/"
+         }, {
+            "date_added": "13406280961000000",
+            "date_last_used": "13417631887023413",
+            "guid": "2ef108f3-6fe4-4363-a114-ab70fb2be0ff",
+            "id": "6",
+            "name": "WhatsApp",
+            "type": "url",
+            "url": "https://web.whatsapp.com/"
+         }, {
+            "date_added": "13406281012000000",
+            "date_last_used": "13417637613576096",
+            "guid": "75001240-ecb5-44d2-8f7b-c61673a60774",
+            "id": "7",
+            "name": "YouTube",
+            "type": "url",
+            "url": "https://www.youtube.com/"
+         }, {
+            "date_added": "13406280984000000",
+            "date_last_used": "13417631879540993",
+            "guid": "ccfd3484-4c74-4eeb-8437-aefced847d51",
+            "id": "8",
+            "name": "Google Gemini",
+            "type": "url",
+            "url": "https://gemini.google.com/app/b62f95b92178ce29"
+         }, {
+            "date_added": "13406281053000000",
+            "date_last_used": "13417637480596837",
+            "guid": "4db5fbbc-f98a-4949-82cc-10eadc5050ed",
+            "id": "9",
+            "name": "GitHub",
+            "type": "url",
+            "url": "https://github.com/davide-ferrara"
+         }, {
+            "date_added": "13406281069000000",
+            "date_last_used": "13417561941462145",
+            "guid": "fc2a53a3-3346-40ed-827d-40169fb7d172",
+            "id": "10",
+            "name": "Router",
+            "type": "url",
+            "url": "http://192.168.8.1/#/login"
+         }, {
+            "date_added": "13406281282000000",
+            "date_last_used": "13416616116455614",
+            "guid": "5ecd81b0-877d-47c4-86cf-e85a9305b004",
+            "id": "11",
+            "name": "MoErgo",
+            "type": "url",
+            "url": "https://my.glove80.com/#/"
+         }, {
+            "date_added": "13407938729000000",
+            "date_last_used": "0",
+            "guid": "60766a88-92ce-4ef5-b298-322f0b005ccb",
+            "id": "25",
+            "name": "Euro Top Tech ",
+            "type": "url",
+            "url": "https://www.eurotoptech.com/"
+         }, {
+            "date_added": "13408057835000000",
+            "date_last_used": "0",
+            "guid": "470fc594-a49c-4662-a397-bdca6421573a",
+            "id": "26",
+            "name": "git - the simple guide - no deep shit!",
+            "type": "url",
+            "url": "https://rogerdudler.github.io/git-guide/"
+         }, {
+            "date_added": "13408058408000000",
+            "date_last_used": "0",
+            "guid": "63fac70d-b3b6-4e62-ad92-c4babed94d92",
+            "id": "27",
+            "name": "Teaching – Roberto Marino",
+            "type": "url",
+            "url": "https://roberto-marino.github.io/teaching/teaching.html#laboratorio-di-reti-e-sistemi-distributi"
+         }, {
+            "date_added": "13416679552643600",
+            "date_last_used": "13417572377140603",
+            "guid": "b33d51f8-8dac-4e2d-8ec7-84b608bad681",
+            "id": "30",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "Xenova (Joshua)",
+            "type": "url",
+            "url": "https://huggingface.co/Xenova/spaces"
+         }, {
+            "date_added": "13416775052293331",
+            "date_last_used": "0",
+            "guid": "41d09ba2-676b-4da9-b054-68d539a24de3",
+            "id": "34",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "Setup Flutter on Arch Linux",
+            "type": "url",
+            "url": "https://gist.github.com/wardvisual/4411a88ee9748aaef1f00ba650d9a74b"
+         }, {
+            "date_added": "13417025569772626",
+            "date_last_used": "0",
+            "guid": "9eecad5f-8e24-4a5f-8249-9f13ca792dde",
+            "id": "36",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "UNIME - Computer Science's Bachelors Thesis Template - Online LaTeX Editor Overleaf",
+            "type": "url",
+            "url": "https://www.overleaf.com/project/69a6f31bd3702b65e12ad5ef"
+         } ],
+         "date_added": "13416502245388242",
+         "date_last_used": "0",
+         "date_modified": "13417025569772626",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Bookmarks bar",
+         "type": "folder"
+      },
+      "other": {
+         "children": [ {
+            "date_added": "13416677666656365",
+            "date_last_used": "0",
+            "guid": "e2c82853-a4c0-45fc-abaa-21956f200847",
+            "id": "29",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "WebGPU Report",
+            "type": "url",
+            "url": "https://webgpureport.org/"
+         } ],
+         "date_added": "13416502245388242",
+         "date_last_used": "0",
+         "date_modified": "13416679552643600",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "2",
+         "name": "Other bookmarks",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [  ],
+         "date_added": "13416502245388242",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "3",
+         "name": "Mobile bookmarks",
+         "type": "folder"
+      }
+   },
+   "version": 1
+}
