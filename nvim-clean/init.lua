@@ -38,6 +38,11 @@ vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
 
+-- Keep the built-in file explorer available on demand, never on startup.
+vim.g.netrw_banner = 0
+vim.g.netrw_liststyle = 3
+vim.g.netrw_winsize = 28
+
 -- Use the system clipboard without slowing startup.
 vim.schedule(function()
   vim.opt.clipboard = "unnamedplus"
@@ -132,6 +137,8 @@ vim.api.nvim_create_user_command("LspStatus", function()
 end, { desc = "Show LSP clients attached to this buffer" })
 
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic list" })
+vim.keymap.set("n", "<leader>e", "<cmd>Lexplore<CR>", { desc = "Toggle file explorer" })
+vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show diagnostic" })
 
 local omarchy_theme = require("omarchy-theme")
 omarchy_theme.setup()
