@@ -75,8 +75,9 @@ local function apply(notify_statusline)
   set("DiagnosticHint", { fg = muted })
 
   -- Snacks pickers (including the file explorer) define their own UI groups.
-  local panel = p.dark_background or bg
-  local panel_alt = p.lighter_background or panel
+  -- Match the editor's transparent background instead of painting a separate panel.
+  local panel = "NONE"
+  local panel_alt = "NONE"
   set("SnacksPicker", { fg = fg, bg = panel })
   set("SnacksPickerTitle", { fg = bg, bg = accent, bold = true })
   set("SnacksPickerBorder", { fg = accent, bg = panel })
