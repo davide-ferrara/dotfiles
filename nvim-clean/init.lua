@@ -227,7 +227,15 @@ require("snacks").setup({
     replace_netrw = false,
     trash = true,
   },
-  picker = { enabled = true },
+  picker = {
+    enabled = true,
+    sources = {
+      explorer = {
+        focus = "list",
+        layout = { hidden = { "input" } },
+      },
+    },
+  },
 })
 
 vim.keymap.set("n", "<leader>e", function()
