@@ -1,0 +1,696 @@
+-- Small Neovim setup for Python, using Neovim's built-in package manager.
+-- Requires Neovim 0.12+ and the existing Mason Pyright install.
+
+-- Keep the built-in netrw file browser from appearing.
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- Neovim 0.12's built-in package manager; no external plugin manager required.
+vim.pack.add({
+  "https://github.com/lewis6991/gitsigns.nvim",
+  "https://github.com/nvim-lualine/lualine.nvim",
+  "https://github.com/MunifTanjim/nui.nvim",
+  "https://github.com/folke/noice.nvim",
+  "https://github.com/nvim-tree/nvim-web-devicons",
+  "https://github.com/folke/snacks.nvim",
+  "https://github.com/folke/which-key.nvim",
+  "https://github.com/nvim-mini/mini.ai",
+  "https://github.com/chentoast/marks.nvim",
+  "https://github.com/nvim-mini/mini.surround",
+  "https://github.com/nvim-mini/mini.pairs",
+  "https://github.com/nvim-treesitter/nvim-treesitter",
+})
+
+vim.g.mapleader = " "
+-- Keep the launch working directory stable while pickers/explorers navigate folders.
+local working_root = vim.fn.getcwd()
+
+local function get_working_root()
+  return working_root
+end
+
+vim.cmd("filetype plugin indent on")
+
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.mouse = "a"
+vim.opt.showmode = false
+vim.opt.breakindent = true
+vim.opt.undofile = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+-- LazyVim-style gutter: signs have their own stable column beside line numbers.
+vim.opt.signcolumn = "yes"
+vim.opt.updatetime = 250
+vim.opt.timeoutlen = 300
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+vim.opt.list = true
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+vim.opt.fillchars:append({ eob = " " })
+vim.opt.inccommand = "split"
+vim.opt.cursorline = true
+vim.opt.scrolloff = 10
+vim.opt.confirm = true
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+vim.opt.tabstop = 4
+
+-- Use the system clipboard without slowing startup.
+vim.schedule(function()
+  vim.opt.clipboard = "unnamedplus"
+end)
+
+local function save_file()
+  local ok, err = pcall(vim.cmd, "update")
+  if not ok then
+    vim.notify(tostring(err), vim.log.levels.ERROR, { title = "Salvataggio" })
+    return
+  end
+  vim.notify("File salvato", vim.log.levels.INFO, { title = "Salvataggio" })
+end
+
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlighting" })
+vim.keymap.set({ "n", "t" }, "<leader>t", function() Snacks.terminal() end, { desc = "Toggle terminal" })
+vim.keymap.set({ "n", "i", "x" }, "<C-s>", save_file, { desc = "Save file" })
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Focus left window" })
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Focus right window" })
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Focus lower window" })
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Focus upper window" })
+vim.keymap.set("n", "<leader>-", "<C-w>s", { remap = true, desc = "Split window below" })
+vim.keymap.set("n", "<leader>|", "<C-w>v", { remap = true, desc = "Split window right" })
+vim.keymap.set("n", "<leader>bb", "<Cmd>buffer #<CR>", { desc = "Switch to previous buffer" })
+vim.keymap.set("n", "<leader>bd", "<Cmd>bdelete<CR>", { desc = "Close current buffer" })
+vim.keymap.set("n", "<leader>bo", function()
+  local current = vim.api.nvim_get_current_buf()
+  local closed, kept = 0, 0
+  for _, buffer in ipairs(vim.fn.getbufinfo({ buflisted = 1 })) do
+    if buffer.bufnr ~= current then
+      local ok = pcall(vim.api.nvim_buf_delete, buffer.bufnr, { force = false })
+      if ok then closed = closed + 1 else kept = kept + 1 end
+    end
+  end
+  vim.notify(
+    string.format("Chiusi %d buffer%s%s", closed, closed == 1 and "" or "", kept > 0 and ("; " .. kept .. " con modifiche conservati") or ""),
+    vim.log.levels.INFO,
+    { title = "Buffer" }
+  )
+end, { desc = "Close other buffers" })
+vim.keymap.set("n", "<leader>wd", "<C-w>c", { remap = true, desc = "Close current window" })
+
+vim.diagnostic.config({
+  update_in_insert = true,
+  severity_sort = true,
+  virtual_text = { spacing = 2, source = "if_many" },
+  float = { border = "rounded", source = "if_many" },
+  signs = {
+    priority = 20,
+    text = {
+      [vim.diagnostic.severity.ERROR] = "",
+      [vim.diagnostic.severity.WARN] = "",
+      [vim.diagnostic.severity.INFO] = "",
+      [vim.diagnostic.severity.HINT] = "",
+    },
+  },
+  underline = true,
+})
+
+local pyright = vim.fn.expand("~/.local/share/nvim/mason/bin/pyright-langserver")
+
+local root_markers = {
+  "pyrightconfig.json",
+  "pyproject.toml",
+  "setup.cfg",
+  "setup.py",
+  "requirements.txt",
+  "Pipfile",
+  "go.mod",
+  "CMakeLists.txt",
+  "Makefile",
+  "uv.lock",
+  "poetry.lock",
+  ".git",
+}
+
+vim.lsp.config("pyright", {
+  cmd = { pyright, "--stdio" },
+  filetypes = { "python" },
+  root_dir = function(bufnr, on_dir)
+    local filename = vim.api.nvim_buf_get_name(bufnr)
+    local root = vim.fs.root(bufnr, root_markers) or vim.fs.dirname(filename)
+    on_dir(root)
+  end,
+  settings = {
+    pyright = {
+      disableTaggedHints = true,
+      disableOrganizeImports = true,
+    },
+    python = {
+      analysis = {
+        typeCheckingMode = "basic",
+        diagnosticMode = "openFilesOnly",
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = true,
+        autoImportCompletions = true,
+      },
+    },
+  },
+  flags = { debounce_text_changes = 100 },
+})
+vim.lsp.enable("pyright")
+
+vim.lsp.config("gopls", {
+  cmd = { vim.fn.expand("~/go/bin/gopls") },
+  filetypes = { "go", "gomod", "gowork", "gotmpl" },
+  root_markers = { "go.work", "go.mod", ".git" },
+  settings = {
+    gopls = {
+      analyses = { unusedparams = true, shadow = true },
+      staticcheck = true,
+    },
+  },
+})
+vim.lsp.enable("gopls")
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(event)
+    local client = vim.lsp.get_client_by_id(event.data.client_id)
+    if client and client:supports_method("textDocument/completion") then
+      vim.lsp.completion.enable(true, client.id, event.buf, { autotrigger = true })
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "python",
+  callback = function(event)
+    vim.bo[event.buf].expandtab = true
+    vim.bo[event.buf].shiftwidth = 4
+    vim.bo[event.buf].softtabstop = 4
+    vim.bo[event.buf].tabstop = 4
+  end,
+})
+
+local function show_lsp_hover()
+  vim.lsp.buf.hover({ border = "rounded" })
+end
+
+vim.keymap.set("n", "K", show_lsp_hover, { desc = "LSP: hover documentation" })
+local function goto_definition()
+  vim.lsp.buf.definition({
+    on_list = function(result)
+      local items = result.items or {}
+      local function jump(item)
+        if not item then return end
+        local filename = item.filename or (item.bufnr and vim.api.nvim_buf_get_name(item.bufnr))
+        if not filename or filename == "" then return end
+        vim.api.nvim_cmd({ cmd = "edit", args = { filename } }, {})
+        vim.api.nvim_win_set_cursor(0, { math.max(item.lnum or 1, 1), math.max((item.col or 1) - 1, 0) })
+      end
+
+      if #items == 1 then
+        jump(items[1])
+      elseif #items > 1 then
+        vim.ui.select(items, {
+          prompt = "Go to definition",
+          format_item = function(item)
+            return string.format("%s:%d:%d", vim.fn.fnamemodify(item.filename or "", ":~:."), item.lnum or 1, item.col or 1)
+          end,
+        }, jump)
+      end
+    end,
+  })
+end
+vim.keymap.set("n", "gd", goto_definition, { desc = "Go to definition" })
+vim.keymap.set("n", "gt", goto_definition, { desc = "Go to definition" })
+vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "Python: references" })
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic" })
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+vim.keymap.set("n", "ge", function()
+  vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.ERROR })
+end, { desc = "Go to next error" })
+vim.keymap.set("n", "gE", function()
+  vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.ERROR })
+end, { desc = "Go to previous error" })
+vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
+vim.keymap.set("n", "<leader>ch", show_lsp_hover, { desc = "Hover documentation" })
+vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename symbol" })
+vim.keymap.set("n", "<leader>cR", vim.lsp.buf.references, { desc = "Find references" })
+vim.keymap.set("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line diagnostics" })
+vim.keymap.set("n", "<leader>cl", function()
+  vim.diagnostic.open_float({ scope = "buffer" })
+end, { desc = "Buffer diagnostics" })
+
+vim.api.nvim_create_user_command("LspStatus", function()
+  vim.print(vim.lsp.get_clients({ bufnr = 0 }))
+end, { desc = "Show LSP clients attached to this buffer" })
+
+vim.keymap.set("n", "<Space>q", "<cmd>wqa<CR>", { desc = "Save and quit", nowait = true })
+vim.keymap.set("n", "<Space>Q", "<cmd>qa!<CR>", { desc = "Quit Neovim without saving", nowait = true })
+
+require("which-key").setup({
+  preset = "classic",
+  delay = 250,
+  sort = { "alphanum", "case" },
+  triggers = {
+    { "<leader>", mode = { "n", "v" } },
+    { "g", mode = { "n", "v" } },
+    { "s", mode = { "n", "v" } },
+  },
+  win = {
+    border = "rounded",
+    row = math.huge,
+    col = math.huge,
+    height = { min = 4, max = 12 },
+    width = { min = 28, max = 48 },
+    padding = { 1, 2 },
+    title = " Comandi ",
+    title_pos = "center",
+  },
+  icons = {
+    mappings = true,
+    colors = true,
+  },
+})
+require("which-key").add({
+  { "s", group = "Surround", icon = { icon = "󰅪", color = "cyan" } },
+  { "sa", desc = "Add surrounding (motion + character)", icon = { icon = "󰐕", color = "green" } },
+  { "sd", desc = "Delete surrounding", icon = { icon = "󰅖", color = "red" } },
+  { "sr", desc = "Replace surrounding", icon = { icon = "󰑕", color = "yellow" } },
+  { "sf", desc = "Find surrounding to the right", icon = { icon = "󰁔", color = "blue" } },
+  { "sF", desc = "Find surrounding to the left", icon = { icon = "󰁍", color = "blue" } },
+  { "sh", desc = "Highlight surrounding", icon = { icon = "󰸱", color = "purple" } },
+  { "ge", desc = "Go to next error", icon = { icon = "", color = "red" } },
+  { "gE", desc = "Go to previous error", icon = { icon = "", color = "red" } },
+  { "<leader>c", group = "Code / LSP", icon = { icon = "󰅩", color = "cyan" } },
+  { "<leader>b", group = "Buffer", icon = { icon = "󰈔", color = "blue" } },
+  { "<leader>bb", desc = "Switch to previous buffer", icon = { icon = "󰓩", color = "cyan" } },
+  { "<leader>bd", desc = "Close current buffer", icon = { icon = "󰅖", color = "red" } },
+  { "<leader>bo", desc = "Close other buffers", icon = { icon = "󰗨", color = "orange" } },
+  { "<leader>w", group = "Window", icon = { icon = "󰖲", color = "blue" } },
+  { "<leader>wd", desc = "Close current window", icon = { icon = "󰅖", color = "red" } },
+  { "<leader>ca", desc = "Code action", icon = { icon = "󰌵", color = "yellow" } },
+  { "<leader>ch", desc = "Hover documentation", icon = { icon = "󰋽", color = "blue" } },
+  { "<leader>cr", desc = "Rename symbol", icon = { icon = "󰑕", color = "orange" } },
+  { "<leader>cR", desc = "Find references", icon = { icon = "󰌹", color = "green" } },
+  { "<leader>cd", desc = "Line diagnostics", icon = { icon = "󰒡", color = "yellow" } },
+  { "<leader>cl", desc = "Buffer diagnostics", icon = { icon = "", color = "yellow" } },
+  { "<leader>e", desc = "Open file explorer", icon = { icon = "󰙅", color = "cyan" } },
+  { "<leader>/", desc = "Search in project", icon = { icon = "", color = "green" } },
+  { "<leader>-", desc = "Split window below", icon = { icon = "󰤼", color = "blue" } },
+  { "<leader>|", desc = "Split window right", icon = { icon = "󰤻", color = "blue" } },
+  { "<leader><space>", desc = "Find files", icon = { icon = "", color = "green" } },
+  { "<leader>q", desc = "Save and quit", icon = { icon = "󰆓", color = "green" } },
+  { "<leader>Q", desc = "Quit without saving", icon = { icon = "󰗼", color = "red" } },
+  { "<leader>r", desc = "Run current file", icon = { icon = "", color = "green" } },
+  { "<leader>t", desc = "Toggle terminal", icon = { icon = "", color = "cyan" } },
+  { "<leader>T", desc = "Test current project", icon = { icon = "󰙨", color = "purple" } },
+  { "<leader>g", group = "Git hunks", icon = { icon = "", color = "orange" } },
+  { "<leader>gs", desc = "Stage hunk", icon = { icon = "󰐕", color = "green" } },
+  { "<leader>gr", desc = "Reset hunk", icon = { icon = "󰕌", color = "red" } },
+  { "<leader>gp", desc = "Preview hunk", icon = { icon = "", color = "cyan" } },
+  { "<leader>gb", desc = "Blame line", icon = { icon = "󰊢", color = "orange" } },
+})
+
+require("mini.ai").setup()
+require("mini.surround").setup()
+require("mini.pairs").setup()
+require("nvim-treesitter").setup({
+  install_dir = vim.fn.stdpath("data") .. "/site",
+})
+require("nvim-treesitter").install({ "python", "go", "c", "cpp", "lua", "vim", "vimdoc" })
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "python", "go", "c", "cpp", "lua", "vim", "vimdoc" },
+  callback = function(args)
+    pcall(vim.treesitter.start, args.buf)
+  end,
+  desc = "Enable Tree-sitter highlighting",
+})
+require("marks").setup({
+  default_mappings = false, -- keep Vim's native m{letter} and '{letter} commands
+  sign_priority = { lower = 15, upper = 15, builtin = 15, bookmark = 15 },
+})
+local function style_mark_signs()
+  vim.api.nvim_set_hl(0, "MarkSignHL", { link = "DiagnosticInfo" })
+  vim.api.nvim_set_hl(0, "MarkSignNumHL", { link = "LineNr" })
+end
+style_mark_signs()
+vim.api.nvim_create_autocmd({ "ColorScheme", "User" }, {
+  pattern = { "*", "OmarchyThemeChanged" },
+  callback = style_mark_signs,
+  desc = "Match mark signs to the active theme",
+})
+
+local omarchy_theme = require("omarchy-theme")
+omarchy_theme.setup()
+
+require("gitsigns").setup({
+  signcolumn = true,
+  numhl = false,
+  signs = {
+    add = { text = "▎" },
+    change = { text = "▎" },
+    delete = { text = "" },
+    topdelete = { text = "" },
+    changedelete = { text = "▎" },
+    untracked = { text = "▎" },
+  },
+})
+
+local function project_root(bufnr)
+  return vim.fs.root(bufnr, root_markers) or vim.fn.getcwd()
+end
+
+local function project_python(root)
+  for _, path in ipairs({ root .. "/.venv/bin/python", root .. "/venv/bin/python" }) do
+    if vim.fn.executable(path) == 1 then
+      return path
+    end
+  end
+  return vim.fn.exepath("python3") ~= "" and vim.fn.exepath("python3") or vim.fn.exepath("python")
+end
+
+local function run_in_terminal(command, cwd)
+  vim.cmd("botright 12new")
+  local buf = vim.api.nvim_get_current_buf()
+  vim.bo[buf].buflisted = false
+  vim.wo.number = false
+  vim.wo.relativenumber = false
+  local job = vim.fn.termopen(command, { cwd = cwd })
+  if job <= 0 then
+    vim.notify("Non riesco ad avviare il comando", vim.log.levels.ERROR)
+    return
+  end
+  vim.cmd.startinsert()
+end
+
+local function save_current_file()
+  local file = vim.api.nvim_buf_get_name(0)
+  if file == "" then
+    vim.notify("Salva prima il file", vim.log.levels.WARN)
+    return nil
+  end
+  if vim.bo.modified then
+    local ok, err = pcall(vim.cmd, "write")
+    if not ok then
+      vim.notify("Salvataggio fallito: " .. tostring(err), vim.log.levels.ERROR)
+      return nil
+    end
+  end
+  return vim.fn.fnamemodify(file, ":p")
+end
+
+local function run_current_file()
+  local file = save_current_file()
+  if not file then return end
+  local root = project_root(0)
+  local filetype = vim.bo.filetype
+
+  if filetype == "python" then
+    local python = project_python(root)
+    if python == "" then
+      vim.notify("Python non trovato nel progetto o nel PATH", vim.log.levels.ERROR)
+      return
+    end
+    run_in_terminal({ python, file }, root)
+    return
+  end
+
+  if filetype == "go" then
+    if vim.fn.executable("go") ~= 1 then
+      vim.notify("Go non trovato nel PATH", vim.log.levels.ERROR)
+      return
+    end
+    local target = vim.fn.filereadable(root .. "/go.mod") == 1 and "." or file
+    run_in_terminal({ "go", "run", target }, root)
+    return
+  end
+
+  if filetype == "c" or filetype == "cpp" then
+    local compiler = vim.fn.exepath(filetype == "cpp" and "g++" or "cc")
+    if compiler == "" then
+      vim.notify("Compilatore C/C++ non trovato nel PATH", vim.log.levels.ERROR)
+      return
+    end
+    local output_dir = vim.fn.stdpath("cache") .. "/nvim-run"
+    vim.fn.mkdir(output_dir, "p")
+    local output = output_dir .. "/" .. vim.fn.sha256(file):sub(1, 12)
+    local args = { compiler, "-Wall", "-Wextra", "-g" }
+    if filetype == "cpp" then table.insert(args, "-std=c++20") end
+    vim.list_extend(args, { file, "-o", output })
+    local compile = table.concat(vim.tbl_map(vim.fn.shellescape, args), " ")
+    run_in_terminal({ "sh", "-lc", compile .. " && " .. vim.fn.shellescape(output) }, root)
+    return
+  end
+
+  vim.notify("Esecuzione automatica supportata per Python, C, C++ e Go", vim.log.levels.WARN)
+end
+
+local function run_project_tests()
+  local root = project_root(0)
+  local filetype = vim.bo.filetype
+
+  if filetype == "python" then
+    local python = project_python(root)
+    if python == "" then
+      vim.notify("Python non trovato nel progetto o nel PATH", vim.log.levels.ERROR)
+      return
+    end
+    vim.fn.system({ python, "-c", "import pytest" })
+    local has_pytest = vim.v.shell_error == 0
+    local command = has_pytest
+        and { python, "-m", "pytest", "-q" }
+      or { python, "-m", "unittest", "discover", "-v" }
+    run_in_terminal(command, root)
+    return
+  end
+
+  if filetype == "go" then
+    if vim.fn.executable("go") ~= 1 then
+      vim.notify("Go non trovato nel PATH", vim.log.levels.ERROR)
+      return
+    end
+    run_in_terminal({ "go", "test", "./..." }, root)
+    return
+  end
+
+  if filetype == "c" or filetype == "cpp" then
+    if vim.fn.filereadable(root .. "/Makefile") == 1 then
+      run_in_terminal({ "make", "test" }, root)
+    elseif vim.fn.isdirectory(root .. "/build") == 1 and vim.fn.executable("ctest") == 1 then
+      run_in_terminal({ "ctest", "--test-dir", root .. "/build", "--output-on-failure" }, root)
+    else
+      vim.notify("Per C/C++ configura un target 'test' nel Makefile o CTest nella cartella build", vim.log.levels.WARN)
+    end
+    return
+  end
+
+  vim.notify("Test automatici supportati per Python, Go e progetti C/C++ con Makefile o CTest", vim.log.levels.WARN)
+end
+
+vim.api.nvim_create_user_command("RunCode", run_current_file, { desc = "Run current source file" })
+vim.api.nvim_create_user_command("TestCode", run_project_tests, { desc = "Run project tests for current language" })
+vim.keymap.set("n", "<leader>r", run_current_file, { desc = "Run current source file" })
+vim.keymap.set("n", "<leader>T", run_project_tests, { desc = "Run project tests" })
+
+local gs = require("gitsigns")
+vim.keymap.set("n", "]c", function() gs.nav_hunk("next") end, { desc = "Git: next change" })
+vim.keymap.set("n", "[c", function() gs.nav_hunk("prev") end, { desc = "Git: previous change" })
+vim.keymap.set("n", "<leader>gs", gs.stage_hunk, { desc = "Git: stage hunk" })
+vim.keymap.set("n", "<leader>gr", gs.reset_hunk, { desc = "Git: reset hunk" })
+vim.keymap.set("n", "<leader>gp", gs.preview_hunk, { desc = "Git: preview hunk" })
+vim.keymap.set("n", "<leader>gb", gs.blame_line, { desc = "Git: blame line" })
+
+local function setup_lualine()
+  require("lualine").setup({
+    options = {
+      theme = require("bronze-ui").lualine_theme(),
+      globalstatus = true,
+      icons_enabled = true,
+      component_separators = { left = "│", right = "│" },
+      section_separators = { left = "", right = "" },
+      refresh = { statusline = 1000 },
+    },
+    sections = {
+      lualine_a = { "mode" },
+      lualine_b = {
+        { "branch", fmt = function(branch) return branch ~= "" and ("git:" .. branch) or "" end },
+        { "diff", symbols = { added = "+", modified = "~", removed = "-" } },
+      },
+      lualine_c = {
+        { "filename", path = 1, symbols = { modified = " [+]", readonly = " [RO]" } },
+      },
+      lualine_x = {
+        { "diagnostics", sections = { "error", "warn" }, symbols = { error = "E:", warn = "W:" } },
+        "filetype",
+      },
+      lualine_y = { "progress" },
+      lualine_z = { "location", function() return os.date("%H:%M") end },
+    },
+    extensions = {
+      {
+        filetypes = { "snacks_dashboard" },
+        sections = {
+          lualine_a = { function() return "◈ Bronze Nvim" end },
+          lualine_b = {},
+          lualine_c = { function() return vim.fn.fnamemodify(get_working_root(), ":t") end },
+          lualine_x = {},
+          lualine_y = { function() return os.date("%d.%m.%Y") end },
+          lualine_z = { function() return os.date("%H:%M") end },
+        },
+      },
+    },
+    inactive_sections = {
+      lualine_a = {},
+      lualine_b = {},
+      lualine_c = { { "filename", path = 1 } },
+      lualine_x = { "location" },
+      lualine_y = {},
+      lualine_z = {},
+    },
+  })
+end
+
+setup_lualine()
+vim.api.nvim_create_autocmd("User", {
+  pattern = "OmarchyThemeChanged",
+  callback = setup_lualine,
+  desc = "Refresh Lualine colors after an Omarchy theme change",
+})
+
+require("noice").setup({
+  cmdline = {
+    enabled = true,
+    view = "cmdline_popup",
+    format = {
+      cmdline = { pattern = "^:", icon = ">", lang = "vim" },
+      search_down = { kind = "search", pattern = "^/", icon = "/", lang = "regex" },
+      search_up = { kind = "search", pattern = "^%?", icon = "?", lang = "regex" },
+    },
+  },
+  views = {
+    cmdline_popup = {
+      position = { row = 2, col = "50%" },
+      size = { width = 60, height = "auto" },
+      border = { style = "rounded", padding = { 0, 1 } },
+      win_options = {
+        winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+      },
+    },
+  },
+  presets = {
+    command_palette = true,
+    bottom_search = false,
+    lsp_doc_border = true,
+  },
+})
+
+require("nvim-web-devicons").setup({ default = true })
+local bronze_ui = require("bronze-ui")
+bronze_ui.setup()
+
+require("snacks").setup({
+  statuscolumn = {
+    enabled = true,
+    left = { "mark", "sign" },
+    right = { "fold", "git" },
+    folds = { open = false, git_hl = false },
+  },
+  dashboard = {
+    enabled = true,
+    width = 58,
+    preset = {
+      header = "Bronze Nvim",
+      keys = {
+        {
+          icon = "  ",
+          key = "f",
+          desc = "Find files",
+          action = function()
+            Snacks.picker.files({ cwd = get_working_root() })
+          end,
+        },
+        {
+          icon = "󰙅  ",
+          key = "e",
+          desc = "Open file explorer",
+          action = function()
+            Snacks.explorer({ cwd = get_working_root() })
+          end,
+        },
+        { icon = "  ", key = "g", desc = "Search code", action = function() Snacks.picker.grep({ cwd = get_working_root() }) end },
+        { icon = "  ", key = "n", desc = "New file", action = ":ene | startinsert" },
+        { icon = "  ", key = "r", desc = "Recent files", action = ":lua Snacks.picker.recent()" },
+        { icon = "󰗼  ", key = "q", desc = "Quit Neovim", action = ":qa" },
+      },
+    },
+    sections = { bronze_ui.sections },
+  },
+  explorer = {
+    enabled = true,
+    replace_netrw = true,
+    trash = true,
+  },
+  picker = {
+    enabled = true,
+    sources = {
+      explorer = {
+        focus = "list",
+        layout = { hidden = { "input" } },
+        win = {
+          list = {
+            keys = {
+              ["<Space>q"] = { function() vim.cmd("wqa") end, mode = { "n", "i" }, nowait = true, desc = "Save and quit" },
+              ["<Space>Q"] = { function() vim.cmd("qa!") end, mode = { "n", "i" }, nowait = true, desc = "Quit Neovim without saving" },
+            },
+          },
+        },
+      },
+    },
+  },
+})
+
+-- LazyVim uses Snacks' statuscolumn to reserve and align spaces for signs,
+-- marks, and line numbers on both sides of the relative-number column.
+vim.opt.statuscolumn = "%!v:lua.Snacks.statuscolumn.get()"
+
+-- `n .` opens a directory buffer, which prevents Snacks' empty-buffer
+-- startup check from showing the dashboard. Replace that buffer on startup.
+vim.api.nvim_create_autocmd("VimEnter", {
+  once = true,
+  callback = function()
+    if vim.fn.argc(-1) ~= 1 then return end
+    local directory = vim.fn.argv(0)
+    if vim.fn.isdirectory(directory) ~= 1 or vim.bo.filetype == "snacks_dashboard" then return end
+
+    vim.schedule(function()
+      if vim.bo.filetype == "snacks_dashboard" then return end
+      -- The directory handler may already have opened and focused the explorer.
+      -- Close that picker before choosing the dashboard window.
+      for _, picker in ipairs(Snacks.picker.get({ source = "explorer" })) do
+        picker:close()
+      end
+      vim.cmd("tcd " .. vim.fn.fnameescape(vim.fn.fnamemodify(directory, ":p")))
+      working_root = vim.fn.getcwd()
+      vim.cmd("enew!")
+      Snacks.dashboard({ buf = 0, win = 0 })
+    end)
+  end,
+  desc = "Show Snacks dashboard when Neovim starts on a directory",
+})
+
+vim.keymap.set("n", "<leader>e", function()
+  Snacks.explorer({ cwd = get_working_root() })
+end, { desc = "Open file explorer" })
+
+vim.keymap.set("n", "<leader>/", function()
+  Snacks.picker.grep({ cwd = get_working_root() })
+end, { desc = "Search in project" })
+
+vim.keymap.set("n", "<leader><space>", function()
+  Snacks.picker.files({ cwd = get_working_root() })
+end, { desc = "Find files" })

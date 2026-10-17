@@ -1,0 +1,52 @@
+{
+  "plugins": {
+    "gitsigns.nvim": {
+      "rev": "fd780920613e541cbdfac41bf711583ed49f9249",
+      "src": "https://github.com/lewis6991/gitsigns.nvim"
+    },
+    "lualine.nvim": {
+      "rev": "221ce6b2d999187044529f49da6554a92f740a96",
+      "src": "https://github.com/nvim-lualine/lualine.nvim"
+    },
+    "marks.nvim": {
+      "rev": "f353e8c08c50f39e99a9ed474172df7eddd89b72",
+      "src": "https://github.com/chentoast/marks.nvim"
+    },
+    "mini.ai": {
+      "rev": "d0c4987a1ead2bcf4eb22cc9815c662d76677c08",
+      "src": "https://github.com/nvim-mini/mini.ai"
+    },
+    "mini.pairs": {
+      "rev": "03eb1f0062a2cee5314d1ac3939246e4bb21352e",
+      "src": "https://github.com/nvim-mini/mini.pairs"
+    },
+    "mini.surround": {
+      "rev": "59ce0acf79e1d930756ef3a7cb4c2369560cf548",
+      "src": "https://github.com/nvim-mini/mini.surround"
+    },
+    "noice.nvim": {
+      "rev": "7bfd942445fb63089b59f97ca487d605e715f155",
+      "src": "https://github.com/folke/noice.nvim"
+    },
+    "nui.nvim": {
+      "rev": "10fc361835c856ba4233ef5ea135b919bf3dce97",
+      "src": "https://github.com/MunifTanjim/nui.nvim"
+    },
+    "nvim-treesitter": {
+      "rev": "d4a9b23a383266bdb0bfb42d565f31e83f27be5e",
+      "src": "https://github.com/nvim-treesitter/nvim-treesitter"
+    },
+    "nvim-web-devicons": {
+      "rev": "ec309a0eaff6ea967e58c275996155ab5c16938d",
+      "src": "https://github.com/nvim-tree/nvim-web-devicons"
+    },
+    "snacks.nvim": {
+      "rev": "882c996cf28183f4d63640de0b4c02ec886d01f2",
+      "src": "https://github.com/folke/snacks.nvim"
+    },
+    "which-key.nvim": {
+      "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",
+      "src": "https://github.com/folke/which-key.nvim"
+    }
+  }
+}

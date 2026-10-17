@@ -1,0 +1,32 @@
+mode = "dark"
+
+# CyanogenMod 11 inspired: bright cyano accent on a neutral charcoal base.
+accent = "#33b5e5"
+selection = "#3f4b50"
+muted = "#596367"
+
+background = "#292727"
+dark_background = "#222020"
+darker_background = "#1b1919"
+lighter_background = "#343232"
+
+foreground = "#f1f5f6"
+dark_foreground = "#919b9e"
+light_foreground = "#c8d0d2"
+bright_foreground = "#ffffff"
+
+red = "#ef5350"
+yellow = "#ffca28"
+orange = "#ff9800"
+green = "#8bc34a"
+cyan = "#33b5e5"
+blue = "#33b5e5"
+magenta = "#ce93d8"
+brown = "#8d6e63"
+
+bright_red = "#ff6e6a"
+bright_yellow = "#ffd740"
+bright_green = "#9ccc65"
+bright_cyan = "#5ac8f2"
+bright_blue = "#5ac8f2"
+bright_magenta = "#e1bee7"

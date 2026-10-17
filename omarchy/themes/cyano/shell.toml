@@ -1,0 +1,25 @@
+# Cyano shell polish: slightly larger bar glyphs and a cyan launcher focus.
+[font]
+base-size = 13
+
+[bar]
+size-horizontal = 28
+size-vertical = 30
+
+[launcher]
+border = "accent"
+border-alpha = 1.0
+selected-background = "accent"
+selected-background-alpha = 0.24
+selected-text = "#ffffff"
+selected-border = "accent"
+selected-border-alpha = 1.0
+
+[menu]
+border = "accent"
+border-alpha = 1.0
+selected-background = "accent"
+selected-background-alpha = 0.24
+selected-text = "#ffffff"
+selected-border = "accent"
+selected-border-alpha = 1.0
