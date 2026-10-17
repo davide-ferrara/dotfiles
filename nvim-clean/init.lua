@@ -133,8 +133,10 @@ vim.api.nvim_create_user_command("LspStatus", function()
   vim.print(vim.lsp.get_clients({ bufnr = 0 }))
 end, { desc = "Show LSP clients attached to this buffer" })
 
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic list" })
+vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, { desc = "Open diagnostic list" })
 vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show diagnostic" })
+vim.keymap.set("n", "<leader>q", "<cmd>wqa<CR>", { desc = "Save all and quit Neovim" })
+vim.keymap.set("n", "<leader>Q", "<cmd>qa!<CR>", { desc = "Quit Neovim without saving" })
 
 local omarchy_theme = require("omarchy-theme")
 omarchy_theme.setup()
