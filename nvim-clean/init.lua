@@ -5,6 +5,8 @@
 vim.pack.add({
   "https://github.com/lewis6991/gitsigns.nvim",
   "https://github.com/nvim-lualine/lualine.nvim",
+  "https://github.com/MunifTanjim/nui.nvim",
+  "https://github.com/folke/noice.nvim",
 })
 
 vim.g.mapleader = " "
@@ -187,4 +189,30 @@ vim.api.nvim_create_autocmd("User", {
   pattern = "OmarchyThemeChanged",
   callback = setup_lualine,
   desc = "Refresh Lualine colors after an Omarchy theme change",
+})
+
+require("noice").setup({
+  cmdline = {
+    enabled = true,
+    view = "cmdline_popup",
+    format = {
+      cmdline = { pattern = "^:", icon = ">", lang = "vim" },
+      search_down = { kind = "search", pattern = "^/", icon = "/", lang = "regex" },
+      search_up = { kind = "search", pattern = "^%?", icon = "?", lang = "regex" },
+    },
+  },
+  views = {
+    cmdline_popup = {
+      position = { row = 2, col = "50%" },
+      size = { width = 60, height = "auto" },
+      border = { style = "rounded", padding = { 0, 1 } },
+      win_options = {
+        winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+      },
+    },
+  },
+  presets = {
+    command_palette = true,
+    bottom_search = false,
+  },
 })

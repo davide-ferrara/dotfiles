@@ -42,9 +42,10 @@ local function apply(notify_statusline)
   local selection_fg = p.selection_foreground or fg
 
   -- Keep Omarchy's terminal background visible, like the previous setup.
-  for _, group in ipairs({ "Normal", "NormalNC", "NormalFloat", "FloatBorder", "SignColumn", "EndOfBuffer", "FoldColumn" }) do
+  for _, group in ipairs({ "Normal", "NormalNC", "NormalFloat", "SignColumn", "EndOfBuffer", "FoldColumn" }) do
     set(group, { fg = fg, bg = "NONE" })
   end
+  set("FloatBorder", { fg = accent, bg = "NONE" })
   set("LineNr", { fg = muted, bg = "NONE" })
   set("CursorLineNr", { fg = accent, bg = "NONE", bold = true })
   set("Comment", { fg = muted, italic = true })
