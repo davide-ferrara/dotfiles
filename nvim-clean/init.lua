@@ -242,3 +242,8 @@ vim.keymap.set("n", "<leader>e", function()
   local root = vim.fs.root(0, { ".git" }) or vim.fn.getcwd()
   Snacks.explorer({ cwd = root })
 end, { desc = "Open file explorer" })
+
+vim.keymap.set("n", "<leader><space>", function()
+  local root = vim.fs.root(0, { ".git" }) or vim.fn.getcwd()
+  Snacks.picker.files({ cwd = root })
+end, { desc = "Find files" })
