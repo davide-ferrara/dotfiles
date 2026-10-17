@@ -19,6 +19,7 @@ vim.pack.add({
   "https://github.com/nvim-mini/mini.surround",
   "https://github.com/nvim-mini/mini.pairs",
   "https://github.com/nvim-treesitter/nvim-treesitter",
+  "https://github.com/MeanderingProgrammer/render-markdown.nvim",
 })
 
 vim.g.mapleader = " "
@@ -83,6 +84,9 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Focus upper window" })
 vim.keymap.set("n", "<leader>-", "<C-w>s", { remap = true, desc = "Split window below" })
 vim.keymap.set("n", "<leader>|", "<C-w>v", { remap = true, desc = "Split window right" })
 vim.keymap.set("n", "<leader>bb", "<Cmd>buffer #<CR>", { desc = "Switch to previous buffer" })
+vim.keymap.set("n", "<leader>mp", function()
+  require("render-markdown").toggle()
+end, { desc = "Toggle Markdown rendering" })
 vim.keymap.set("n", "<leader>bd", "<Cmd>bdelete<CR>", { desc = "Close current buffer" })
 vim.keymap.set("n", "<leader>bo", function()
   local current = vim.api.nvim_get_current_buf()
@@ -288,6 +292,8 @@ require("which-key").add({
   { "gE", desc = "Go to previous error", icon = { icon = "", color = "red" } },
   { "<leader>c", group = "Code / LSP", icon = { icon = "󰅩", color = "cyan" } },
   { "<leader>b", group = "Buffer", icon = { icon = "󰈔", color = "blue" } },
+  { "<leader>m", group = "Markdown", icon = { icon = "󰍔", color = "cyan" } },
+  { "<leader>mp", desc = "Toggle Markdown rendering", icon = { icon = "󰍔", color = "cyan" } },
   { "<leader>bb", desc = "Switch to previous buffer", icon = { icon = "󰓩", color = "cyan" } },
   { "<leader>bd", desc = "Close current buffer", icon = { icon = "󰅖", color = "red" } },
   { "<leader>bo", desc = "Close other buffers", icon = { icon = "󰗨", color = "orange" } },
@@ -322,14 +328,15 @@ require("mini.pairs").setup()
 require("nvim-treesitter").setup({
   install_dir = vim.fn.stdpath("data") .. "/site",
 })
-require("nvim-treesitter").install({ "python", "go", "c", "cpp", "lua", "vim", "vimdoc" })
+require("nvim-treesitter").install({ "python", "go", "c", "cpp", "lua", "vim", "vimdoc", "markdown", "markdown_inline" })
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "python", "go", "c", "cpp", "lua", "vim", "vimdoc" },
+  pattern = { "python", "go", "c", "cpp", "lua", "vim", "vimdoc", "markdown" },
   callback = function(args)
     pcall(vim.treesitter.start, args.buf)
   end,
   desc = "Enable Tree-sitter highlighting",
 })
+require("render-markdown").setup({})
 require("marks").setup({
   default_mappings = false, -- keep Vim's native m{letter} and '{letter} commands
   sign_priority = { lower = 15, upper = 15, builtin = 15, bookmark = 15 },
