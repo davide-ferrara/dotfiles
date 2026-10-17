@@ -1,5 +1,11 @@
--- Small, plugin-free Neovim setup for Python.
--- Requires Neovim 0.11+ and the existing Mason Pyright install.
+-- Small Neovim setup for Python, using Neovim's built-in package manager.
+-- Requires Neovim 0.12+ and the existing Mason Pyright install.
+
+-- Neovim 0.12's built-in package manager; no external plugin manager required.
+vim.pack.add({
+  "https://github.com/lewis6991/gitsigns.nvim",
+  "https://github.com/nvim-lualine/lualine.nvim",
+})
 
 vim.g.mapleader = " "
 vim.cmd("filetype plugin indent on")
@@ -125,4 +131,60 @@ end, { desc = "Show LSP clients attached to this buffer" })
 
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic list" })
 
-require("omarchy-theme").setup()
+local omarchy_theme = require("omarchy-theme")
+omarchy_theme.setup()
+
+require("gitsigns").setup({
+  signs = {
+    add = { text = "+" },
+    change = { text = "~" },
+    delete = { text = "_" },
+    topdelete = { text = "‾" },
+    changedelete = { text = "~" },
+    untracked = { text = "+" },
+  },
+})
+
+local function setup_lualine()
+  require("lualine").setup({
+    options = {
+      theme = omarchy_theme.lualine_theme(),
+      globalstatus = true,
+      icons_enabled = false,
+      component_separators = { left = "│", right = "│" },
+      section_separators = { left = "", right = "" },
+      refresh = { statusline = 1000 },
+    },
+    sections = {
+      lualine_a = { "mode" },
+      lualine_b = {
+        { "branch", fmt = function(branch) return branch ~= "" and ("git:" .. branch) or "" end },
+        { "diff", symbols = { added = "+", modified = "~", removed = "-" } },
+      },
+      lualine_c = {
+        { "filename", path = 1, symbols = { modified = " [+]", readonly = " [RO]" } },
+      },
+      lualine_x = {
+        { "diagnostics", sections = { "error", "warn" }, symbols = { error = "E:", warn = "W:" } },
+        "filetype",
+      },
+      lualine_y = { "progress" },
+      lualine_z = { "location", function() return os.date("%H:%M") end },
+    },
+    inactive_sections = {
+      lualine_a = {},
+      lualine_b = {},
+      lualine_c = { { "filename", path = 1 } },
+      lualine_x = { "location" },
+      lualine_y = {},
+      lualine_z = {},
+    },
+  })
+end
+
+setup_lualine()
+vim.api.nvim_create_autocmd("User", {
+  pattern = "OmarchyThemeChanged",
+  callback = setup_lualine,
+  desc = "Refresh Lualine colors after an Omarchy theme change",
+})
