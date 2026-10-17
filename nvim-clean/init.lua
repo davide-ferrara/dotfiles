@@ -7,6 +7,8 @@ vim.pack.add({
   "https://github.com/nvim-lualine/lualine.nvim",
   "https://github.com/MunifTanjim/nui.nvim",
   "https://github.com/folke/noice.nvim",
+  "https://github.com/nvim-tree/nvim-web-devicons",
+  "https://github.com/folke/snacks.nvim",
 })
 
 vim.g.mapleader = " "
@@ -37,11 +39,6 @@ vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
-
--- Keep the built-in file explorer available on demand, never on startup.
-vim.g.netrw_banner = 0
-vim.g.netrw_liststyle = 3
-vim.g.netrw_winsize = 28
 
 -- Use the system clipboard without slowing startup.
 vim.schedule(function()
@@ -137,7 +134,6 @@ vim.api.nvim_create_user_command("LspStatus", function()
 end, { desc = "Show LSP clients attached to this buffer" })
 
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic list" })
-vim.keymap.set("n", "<leader>e", "<cmd>Lexplore<CR>", { desc = "Toggle file explorer" })
 vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show diagnostic" })
 
 local omarchy_theme = require("omarchy-theme")
@@ -223,3 +219,18 @@ require("noice").setup({
     bottom_search = false,
   },
 })
+
+require("nvim-web-devicons").setup({ default = true })
+require("snacks").setup({
+  explorer = {
+    enabled = true,
+    replace_netrw = false,
+    trash = true,
+  },
+  picker = { enabled = true },
+})
+
+vim.keymap.set("n", "<leader>e", function()
+  local root = vim.fs.root(0, { ".git" }) or vim.fn.getcwd()
+  Snacks.explorer({ cwd = root })
+end, { desc = "Open file explorer" })
