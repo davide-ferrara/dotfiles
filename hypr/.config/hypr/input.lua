@@ -5,9 +5,9 @@
 -- See https://wiki.hypr.land/Configuring/Basics/Variables/#input
 hl.config({
   input = {
-    -- Use multiple keyboard layouts and switch between them with Left Alt + Right Alt.
-    kb_layout = "eu",
-    kb_options = "",
+    -- Standard Italian XKB layout; Caps Lock and Escape are swapped.
+    kb_layout = "it",
+    kb_options = "caps:swapescape",
 
     -- Use a specific keyboard variant if needed (e.g. intl for international keyboards).
     kb_variant = "",
