@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Hyprland
+Comment=Hyprland configured by Omarchy (Lua)
+Exec=uwsm start -g -1 -e -D Hyprland -- Hyprland --config /home/dff/.config/hypr/hyprland.lua
+TryExec=uwsm
+DesktopNames=Hyprland
+Type=Application
+Keywords=tiling;wayland;compositor;
