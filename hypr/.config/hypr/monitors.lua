@@ -4,8 +4,9 @@
 -- Monitor scale is Hyprland's scale for the output. It sizes everything
 -- Wayland-native, accepts fractions (1.6, 1.75), and applies immediately.
 -- "auto" lets Hyprland pick per display.
-local omarchy_monitor_scale = "auto"
--- hl.monitor({ output = "", mode = "preferred", position = "auto", scale = omarchy_monitor_scale })
+-- Use 1x on every output, including the laptop's internal display.
+local omarchy_monitor_scale = 1
+hl.monitor({ output = "", mode = "preferred", position = "auto", scale = omarchy_monitor_scale })
 
 -- Configure a specific monitor.
 hl.monitor({ output = "DP-2", mode = "2560x1440@180", position = "0x0", scale = 1 })
@@ -18,5 +19,5 @@ hl.monitor({ output = "DP-2", mode = "2560x1440@180", position = "0x0", scale = 
 -- crisp instead of being stretched by the compositor. GTK only honors whole
 -- numbers, so use the nearest integer to the monitor scale, and restart an
 -- app for a change to reach it.
-local omarchy_gdk_scale = 2
+local omarchy_gdk_scale = 1
 hl.env("GDK_SCALE", tostring(omarchy_gdk_scale))
