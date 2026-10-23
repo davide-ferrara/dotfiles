@@ -1,13 +1,10 @@
 -- Change the default Omarchy look'n'feel.
 
--- Use Hyprland's scrolling layout as a one-column carousel on every
--- workspace unless a workspace explicitly overrides it.
+-- Use Hyprland's dwindle layout, which arranges tiled windows in the
+-- familiar Fibonacci-style spiral.
 hl.config({
   general = {
-    layout = "scrolling",
-  },
-  scrolling = {
-    column_width = 0.97,
+    layout = "dwindle",
   },
 })
 

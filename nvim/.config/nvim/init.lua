@@ -51,6 +51,7 @@ vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 vim.opt.fillchars:append({ eob = " " })
 vim.opt.inccommand = "split"
 vim.opt.cursorline = true
+vim.opt.colorcolumn = "120"
 vim.opt.scrolloff = 10
 vim.opt.confirm = true
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
