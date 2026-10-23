@@ -4,8 +4,8 @@
 -- Start the primary browser and reattach the persistent Herdr session after
 -- UWSM's app daemon is ready. Native window rules keep the workspace
 -- assignment independent of process-launch timing.
-hl.window_rule({ match = { initial_class = "chromium" }, workspace = "1 silent" })
+hl.window_rule({ match = { initial_class = "zen" }, workspace = "1 silent" })
 hl.window_rule({ match = { initial_class = "com.mitchellh.ghostty" }, workspace = "2 silent" })
 
-o.exec_on_start("sleep 3 && uwsm-app -- chromium")
+o.exec_on_start("sleep 3 && omarchy-launch-browser")
 o.exec_on_start("sleep 4 && uwsm-app -- ghostty -e herdr")
