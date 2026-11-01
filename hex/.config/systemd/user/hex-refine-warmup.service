@@ -1,0 +1,13 @@
+[Unit]
+Description=Preload the small local Hex correction model
+After=hex.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/dff/.local/bin/hex-refine-local --warmup
+TimeoutStartSec=100
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# omarchy:summary=Record dictation using Hex
+# omarchy:args=<start|stop|toggle>
+
+# Hex's control commands exit 3 when no Hex is running and never launch it.
+not_running=3
+no_speech=4
+
+hex_state() {
+  hex status --json 2>/dev/null | jq -r 'if .capture.state == "recording" then "dictating" else (.desktop.activity.state // .capture.state // empty) end'
+}
+
+start() {
+  hex dictation start
+  local result=$?
+  if (( result == not_running )); then
+    hex start >/dev/null && hex dictation start
+  else
+    return "$result"
+  fi
+}
+
+# Take Hex's transcript, refine it locally, then paste UTF-8 through the
+# compositor with the appropriate shortcut for terminals and other apps.
+stop() {
+  local text result
+  if omarchy-cmd-missing hex || [[ $(hex_state) != "dictating" ]]; then
+    return 0
+  fi
+  text=$(hex dictation stop --print)
+  result=$?
+  if (( result == 0 )); then
+    # Keep correction local and bounded; a stalled model never loses dictation.
+    local refined
+    if [[ ! -e "$HOME/.config/hex/refine-disabled" ]]; then
+      # Normalize spaces and remove clear hesitation noises even on LLM timeout.
+      if refined=$(printf '%s' "$text" | /home/dff/.local/bin/hex-refine-local --clean-only); then
+        text=$refined
+      fi
+      [[ -n $text ]] || return 0
+      if refined=$(printf '%s' "$text" | timeout --kill-after=0.1s 1.5s /home/dff/.local/bin/hex-refine-local); then
+        [[ -n $refined ]] && text=$refined
+      fi
+    fi
+    printf '%s' "$text" | /home/dff/.local/bin/hex-paste-text
+  elif (( result != no_speech )); then
+    return "$result"
+  fi
+}
+
+case "${1:-}" in
+  start) start ;;
+  stop) stop ;;
+  toggle)
+    if [[ $(hex_state) == "dictating" ]]; then
+      stop
+    else
+      start
+    fi
+    ;;
+  *) echo "Usage: omarchy dictation hex <start|stop|toggle>" >&2; exit 1 ;;
+esac

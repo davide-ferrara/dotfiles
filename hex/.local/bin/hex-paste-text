@@ -1,0 +1,22 @@
+#!/bin/bash
+# Paste dictation as UTF-8 instead of synthesizing a key for every character.
+set -euo pipefail
+wl-copy --type 'text/plain;charset=utf-8'
+sleep 0.15
+hyprctl eval '
+local terminal = false
+local window = hl.get_active_window()
+if window then
+  for _, tag in ipairs(window.tags or {}) do
+    if tag:gsub("%*$", "") == "terminal" then
+      terminal = true
+      break
+    end
+  end
+end
+local mods = terminal and "CTRL SHIFT" or "CTRL"
+hl.dispatch(hl.dsp.send_key_state({ mods = mods, key = "V", state = "down" }))
+hl.timer(function()
+  hl.dispatch(hl.dsp.send_key_state({ mods = mods, key = "V", state = "up" }))
+end, { timeout = 50, type = "oneshot" })
+' >/dev/null

@@ -1,0 +1,21 @@
+# X-Hex-Managed=true
+[Unit]
+Description=Hex background dictation
+PartOf=graphical-session.target
+After=graphical-session.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=notify
+NotifyAccess=main
+ExecStart="/home/dff/.local/bin/hex" service
+Environment="HEX_APPLICATION_SUPPORT_DIR=/home/dff/.local/share/hex"
+EnvironmentFile=-/home/dff/.local/share/hex/session.env
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=30
+UMask=0077
+
+[Install]
+WantedBy=graphical-session.target

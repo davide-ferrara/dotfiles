@@ -13,7 +13,8 @@
 --   omarchy_preinstalled_bindings = false
 
 hl.unbind("SUPER + SHIFT + F")
-o.bind("SUPER + R", "Hyprvoice", "hyprvoice toggle")
+hl.unbind("SUPER + R")
+o.bind("SUPER + R", "Hex dictation", "/home/dff/.local/bin/omarchy-dictation-hex toggle")
 o.bind("SUPER + SHIFT + F", "Superfile", "ghostty -e spf")
 
 -- Add a new binding.
@@ -42,3 +43,10 @@ o.bind("SUPER + SHIFT + F", "File manager", { launch = "/home/dff/.local/bin/str
 o.bind("SUPER + ALT + SHIFT + F", "File manager (cwd)",
   "uwsm-app -- /home/dff/.local/bin/strata \"$(omarchy-cmd-terminal-cwd)\"")
 -- strata-installer: file-manager end
+
+-- Hex dictation: override the packaged Voxtype bindings.
+hl.unbind("SUPER + CTRL + X")
+hl.unbind("F9")
+o.bind("SUPER + CTRL + X", "Toggle Hex dictation", "/home/dff/.local/bin/omarchy-dictation-hex toggle")
+o.bind("F9", "Start Hex dictation (push-to-talk)", "/home/dff/.local/bin/omarchy-dictation-hex start")
+o.bind("F9", "Stop Hex dictation (push-to-talk)", "/home/dff/.local/bin/omarchy-dictation-hex stop", { release = true })
