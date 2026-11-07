@@ -8,6 +8,17 @@ stow --no-folding --dir="$HOME/dotfiles" --target="$HOME" nvim hypr omarchy alac
 
 See [the local dictation setup](hex/README.md) for Hex/Gemma dependencies and restore steps.
 
+## Spell checking
+
+Install the Italian and US English dictionaries on Arch/Omarchy:
+
+```bash
+sudo pacman -S --needed hunspell-it hunspell-en_us
+```
+
+Applications select spell-check languages separately. In Zen, right-click a
+text field and select Italian and English under Languages.
+
 ## Strata file manager
 
 The Hyprland bindings already launch Strata with Super+Shift+F (or

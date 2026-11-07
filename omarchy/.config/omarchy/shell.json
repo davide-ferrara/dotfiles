@@ -35,7 +35,7 @@
           "id": "omarchy.tray"
         },
         {
-          "id": "dff.agents"
+          "id": "omalink.phone"
         },
         {
           "id": "omarchy.bluetooth"
@@ -44,15 +44,21 @@
           "id": "omarchy.network"
         },
         {
-          "id": "omarchy.audio"
+          "id": "omarchy.monitor"
         },
         {
-          "id": "omarchy.monitor"
+          "id": "dff.agents"
+        },
+        {
+          "id": "omarchy.audio"
         },
         {
           "id": "omarchy.power"
         }
-      ]
+      ],
+      "centerBegin": [],
+      "centerEnd": [],
+      "tray": []
     },
     "position": "top",
     "transparent": true
