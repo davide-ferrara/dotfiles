@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "dff.meteora",
+  "name": "Meteora Reflections",
+  "version": "1.0.0",
+  "author": "dff",
+  "description": "Hourly reflections inspired by Meteora",
+  "kinds": ["bar-widget"],
+  "entryPoints": { "barWidget": "BarWidget.qml" },
+  "barWidget": {
+    "displayName": "Meteora Reflections",
+    "description": "A short reflection that changes every hour",
+    "category": "Other",
+    "allowMultiple": false
+  }
+}
