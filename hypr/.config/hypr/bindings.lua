@@ -1,5 +1,5 @@
--- Keep only your personal keybinding overrides here. Add new bindings or
--- unbind defaults before replacing them.
+-- Keep only your personal keybinding overrides here. Add new bindings with
+-- o.bind or replace defaults with o.rebind.
 
 -- See current bindings and descriptions:
 --   omarchy menu keybindings --print
@@ -12,41 +12,22 @@
 -- To disable all preinstalled app/webapp bindings, set:
 --   omarchy_preinstalled_bindings = false
 
-hl.unbind("SUPER + SHIFT + F")
-hl.unbind("SUPER + R")
-o.bind("SUPER + R", "Hex dictation", "/home/dff/.local/bin/omarchy-dictation-hex toggle")
-o.bind("SUPER + SHIFT + F", "Superfile", "ghostty -e spf")
-
 -- Add a new binding.
 -- o.bind("SUPER + SHIFT + R", "SSH", "alacritty -e ssh your-server")
 
--- Close the active window with a middle mouse click.
--- o.bind("mouse:274", "Close window", hl.dsp.window.close(), { click = true })
-
--- Change an existing binding by unbinding it first, then binding the key again.
--- This example changes SUPER+SPACE from the launcher to the Omarchy root menu.
--- hl.unbind("SUPER + SPACE")
--- o.bind("SUPER + SPACE", "Omarchy menu", "omarchy-menu toggle root")
+-- Change an existing binding. o.rebind takes the same arguments as o.bind.
+-- This example replaces the default file manager with Flea.
+-- o.rebind("SUPER + SHIFT + F", "File manager", { launch = "flea" })
 
 -- Disable a default binding without replacing it.
 -- hl.unbind("SUPER + SHIFT + B")
 
 -- Logitech MX Keys examples:
--- o.bind("SUPER + SHIFT + S", nil, "omarchy-capture-screenshot")
 -- o.bind("SUPER + H", nil, "voxtype record toggle")
--- o.bind("SUPER + PERIOD", nil, "omarchy-shell shell toggle omarchy.emojis")
+-- o.bind("SUPER + PERIOD", nil, { panel = "omarchy.emojis" })
 
--- strata-installer: file-manager start
-hl.unbind("SUPER + SHIFT + F")
-hl.unbind("SUPER + ALT + SHIFT + F")
-o.bind("SUPER + SHIFT + F", "File manager", { launch = "/home/dff/.local/bin/strata" })
-o.bind("SUPER + ALT + SHIFT + F", "File manager (cwd)",
-  "uwsm-app -- /home/dff/.local/bin/strata \"$(omarchy-cmd-terminal-cwd)\"")
--- strata-installer: file-manager end
-
--- Hex dictation: override the packaged Voxtype bindings.
-hl.unbind("SUPER + CTRL + X")
-hl.unbind("F9")
-o.bind("SUPER + CTRL + X", "Toggle Hex dictation", "/home/dff/.local/bin/omarchy-dictation-hex toggle")
-o.bind("F9", "Start Hex dictation (push-to-talk)", "/home/dff/.local/bin/omarchy-dictation-hex start")
-o.bind("F9", "Stop Hex dictation (push-to-talk)", "/home/dff/.local/bin/omarchy-dictation-hex stop", { release = true })
+-- Hold F9 to dictate and release it to finish.
+o.bind_hold("F9", "Start dictation (push-to-talk)", "omarchy-dictation start", "Stop dictation (push-to-talk)", "omarchy-dictation stop")
+-- Replace the default Copilot menu shortcut with push-to-talk.
+hl.unbind("SUPER + SHIFT + code:201")
+o.bind_hold("SUPER + SHIFT + code:201", "Start dictation (push-to-talk)", "omarchy-dictation start", "Stop dictation (push-to-talk)", "omarchy-dictation stop")
