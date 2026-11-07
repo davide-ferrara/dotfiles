@@ -31,3 +31,7 @@ o.bind_hold("F9", "Start dictation (push-to-talk)", "omarchy-dictation start", "
 -- Replace the default Copilot menu shortcut with push-to-talk.
 hl.unbind("SUPER + SHIFT + code:201")
 o.bind_hold("SUPER + SHIFT + code:201", "Start dictation (push-to-talk)", "omarchy-dictation start", "Stop dictation (push-to-talk)", "omarchy-dictation stop")
+
+-- Open Strata with the standard file-manager shortcuts.
+o.rebind("SUPER + SHIFT + F", "File manager", { launch = "strata" })
+o.rebind("SUPER + ALT + SHIFT + F", "File manager (cwd)", 'uwsm-app -- "$HOME/.local/bin/strata" "$(omarchy-cmd-terminal-cwd)"')
