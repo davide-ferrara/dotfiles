@@ -27,4 +27,3 @@ require("default.hypr.toggles")
 
 -- Add any other personal Hyprland configuration below.
 -- o.window("qemu", { workspace = "5" })
-o.window("^chrome-web\\.whatsapp\\.com__-Default$", { workspace = "9 silent" })

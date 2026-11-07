@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import qs.Commons
 import qs.Ui
 
@@ -39,6 +40,7 @@ BarWidget {
     "And I know I may end up failing too — Numb"
   ]
   property int offset: 0
+  property bool meteoraActive: false
   readonly property int hourIndex: Math.floor(clock.date.getTime() / 3600000)
   readonly property int reflectionIndex: (((hourIndex + offset) % reflections.length) + reflections.length) % reflections.length
   readonly property string entry: reflections[reflectionIndex]
@@ -52,7 +54,17 @@ BarWidget {
 
   implicitWidth: vertical ? 0 : Math.min(label.implicitWidth, 400) + Style.space(16)
   implicitHeight: vertical ? 0 : barSize
-  visible: !vertical
+  visible: !vertical && meteoraActive
+
+  FileView {
+    id: themeFile
+    path: Quickshell.env("HOME") + "/.local/state/omarchy/current/theme.name"
+    watchChanges: true
+    printErrors: false
+    onLoaded: root.meteoraActive = text().trim() === "meteora"
+    onLoadFailed: root.meteoraActive = false
+    onFileChanged: reload()
+  }
 
   SystemClock {
     id: clock
