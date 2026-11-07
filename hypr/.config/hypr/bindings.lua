@@ -35,3 +35,6 @@ o.bind_hold("SUPER + SHIFT + code:201", "Start dictation (push-to-talk)", "omarc
 -- Open Strata with the standard file-manager shortcuts.
 o.rebind("SUPER + SHIFT + F", "File manager", { launch = "strata" })
 o.rebind("SUPER + ALT + SHIFT + F", "File manager (cwd)", 'uwsm-app -- "$HOME/.local/bin/strata" "$(omarchy-cmd-terminal-cwd)"')
+
+-- Replace workspace layout cycling with the system lock shortcut.
+o.rebind("SUPER + L", "Lock system", "omarchy-system-lock")
