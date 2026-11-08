@@ -58,3 +58,12 @@
 -- hl.gesture({ fingers = 3, direction = "right", action = function() hl.dispatch(hl.dsp.focus({ direction = "r" })) end })
 
 hl.config({ input = { kb_options = "caps:swapescape" } })
+
+-- Match the main computer's layout on the Glove80, while keeping the
+-- laptop's Italian layout and its Caps Lock/Escape swap.
+hl.device({
+  name = "glove80-keyboard",
+  kb_layout = "eu",
+  kb_variant = "",
+  kb_options = "",
+})
