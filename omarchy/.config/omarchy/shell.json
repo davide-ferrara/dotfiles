@@ -38,7 +38,9 @@
           "id": "omarchy.tray"
         },
         {
-          "id": "omalink.phone"
+          "id": "omalink.phone",
+          "selectedDeviceId": "15ea4a9d614043d18ae6cd4033cf7a9c",
+          "selectedDeviceName": "Pixel 8"
         },
         {
           "id": "omarchy.bluetooth"
